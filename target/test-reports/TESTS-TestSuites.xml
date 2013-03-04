@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites>
+  <testsuite errors="1" failures="0" hostname="DLT220" id="0" name="StockQuoteTagLibTests" package="com.ibaralf" tests="1" time="1.771" timestamp="2012-12-21T20:30:46">
+      <properties />
+
+      <testcase classname="com.ibaralf.StockQuoteTagLibTests" name="testQuote" time="1.44">
+          <error message="Can not deserialize instance of java.util.ArrayList out of START_OBJECT token&#xa; at [Source: java.io.StringReader@43fdd342; line: 1, column: 80] (through reference chain: com.ibaralf.StockQuote[&quot;query&quot;]-&gt;com.ibaralf.Query[&quot;results&quot;]-&gt;com.ibaralf.Results[&quot;quote&quot;])" type="org.codehaus.jackson.map.JsonMappingException">org.codehaus.jackson.map.JsonMappingException: Can not deserialize instance of java.util.ArrayList out of START_OBJECT token
+ at [Source: java.io.StringReader@43fdd342; line: 1, column: 80] (through reference chain: com.ibaralf.StockQuote[&quot;query&quot;]-&gt;com.ibaralf.Query[&quot;results&quot;]-&gt;com.ibaralf.Results[&quot;quote&quot;])
+	at org.codehaus.jackson.map.JsonMappingException.from(JsonMappingException.java:163)
+	at org.codehaus.jackson.map.deser.StdDeserializationContext.mappingException(StdDeserializationContext.java:219)
+	at org.codehaus.jackson.map.deser.StdDeserializationContext.mappingException(StdDeserializationContext.java:212)
+	at org.codehaus.jackson.map.deser.std.CollectionDeserializer.handleNonArray(CollectionDeserializer.java:246)
+	at org.codehaus.jackson.map.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:204)
+	at org.codehaus.jackson.map.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:194)
+	at org.codehaus.jackson.map.deser.std.CollectionDeserializer.deserialize(CollectionDeserializer.java:30)
+	at org.codehaus.jackson.map.deser.SettableBeanProperty.deserialize(SettableBeanProperty.java:299)
+	at org.codehaus.jackson.map.deser.SettableBeanProperty$MethodProperty.deserializeAndSet(SettableBeanProperty.java:414)
+	at org.codehaus.jackson.map.deser.BeanDeserializer.deserializeFromObject(BeanDeserializer.java:697)
+	at org.codehaus.jackson.map.deser.BeanDeserializer.deserialize(BeanDeserializer.java:580)
+	at org.codehaus.jackson.map.deser.SettableBeanProperty.deserialize(SettableBeanProperty.java:299)
+	at org.codehaus.jackson.map.deser.SettableBeanProperty$MethodProperty.deserializeAndSet(SettableBeanProperty.java:414)
+	at org.codehaus.jackson.map.deser.BeanDeserializer.deserializeFromObject(BeanDeserializer.java:697)
+	at org.codehaus.jackson.map.deser.BeanDeserializer.deserialize(BeanDeserializer.java:580)
+	at org.codehaus.jackson.map.deser.SettableBeanProperty.deserialize(SettableBeanProperty.java:299)
+	at org.codehaus.jackson.map.deser.SettableBeanProperty$MethodProperty.deserializeAndSet(SettableBeanProperty.java:414)
+	at org.codehaus.jackson.map.deser.BeanDeserializer.deserializeFromObject(BeanDeserializer.java:697)
+	at org.codehaus.jackson.map.deser.BeanDeserializer.deserialize(BeanDeserializer.java:580)
+	at org.codehaus.jackson.map.ObjectMapper._readMapAndClose(ObjectMapper.java:2732)
+	at org.codehaus.jackson.map.ObjectMapper.readValue(ObjectMapper.java:1863)
+	at com.ibaralf.YahooFinanceYQLService.getQuote(YahooFinanceYQLService.groovy:61)
+	at com.ibaralf.StockQuoteTagLib$_closure1.doCall(StockQuoteTagLib.groovy:12)
+	at com.ibaralf.StockQuoteTagLibTests.testQuote(StockQuoteTagLibTests.groovy:16)
+</error>
+
+      </testcase>
+
+      <system-out><![CDATA[--Output from testQuote--
+
+
+INTAGLIB AAPL && Name
+IN HERE CALLED AAPL Name
+URL : http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20%28%22AAPL%22%29&env=store://datatables.org/alltableswithkeys&format=json
+]]></system-out>
+
+      <system-err><![CDATA[--Output from testQuote--
+]]></system-err>
+
+  </testsuite>
+  <testsuite errors="0" failures="0" hostname="DLT220" id="1" name="YahooFinanceControllerTests" package="com.ibaralf" tests="1" time="1.028" timestamp="2012-12-21T20:30:48">
+      <properties />
+
+      <testcase classname="com.ibaralf.YahooFinanceControllerTests" name="testSomething" time="1.022" />
+
+      <system-out><![CDATA[--Output from testSomething--
+]]></system-out>
+
+      <system-err><![CDATA[--Output from testSomething--
+]]></system-err>
+
+  </testsuite>
+  <testsuite errors="0" failures="0" hostname="DLT220" id="2" name="YahooFinanceYQLServiceTests" package="com.ibaralf" tests="1" time="0.335" timestamp="2012-12-21T20:30:48">
+      <properties />
+
+      <testcase classname="com.ibaralf.YahooFinanceYQLServiceTests" name="testSomething" time="0.04" />
+
+      <system-out><![CDATA[--Output from testSomething--
+]]></system-out>
+
+      <system-err><![CDATA[--Output from testSomething--
+]]></system-err>
+
+  </testsuite>
+</testsuites>
