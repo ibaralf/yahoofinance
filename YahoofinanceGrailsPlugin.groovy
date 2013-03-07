@@ -8,7 +8,7 @@ class YahoofinanceGrailsPlugin {
 	def documentation = "http://grails.org/plugin/yahoofinance"
 
 	def license = "APACHE"
-	def organization = [name: "Ibaralf Inc.", url: "http://www.ibaralf.com/"]
+	def organization = [name: "", url: ""]
 	def issueManagement = [system: "GitHub", url: "https://github.com/ibaralf/yahoofinance/issues"]
 	def scm = [url: "https://github.com/ibaralf/yahoofinance"]
 }
