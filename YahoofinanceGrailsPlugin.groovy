@@ -3,7 +3,7 @@ class YahoofinanceGrailsPlugin {
 	def grailsVersion = "2.0 > *"
 	def title = "Yahoofinance Plugin"
 	def author = "Ibarra Alfonso"
-	def authorEmail = "ibaralf@yahoo.com"
+	def authorEmail = "ibarra.alfonso@gmail.com"
 	def description = 'Gets stock quotes and other metrics from Yahoo Finance using the yahoo APIs. (YQL)'
 	def documentation = "http://grails.org/plugin/yahoofinance"
 
