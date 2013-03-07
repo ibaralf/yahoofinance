@@ -1,0 +1,30 @@
+<plugin name='yahoofinance' version='0.1' grailsVersion='2.0 &gt; *'>
+  <author>Ibarra Alfonso</author>
+  <authorEmail>ibaralf@yahoo.com</authorEmail>
+  <title>Yahoofinance Plugin</title>
+  <description>Gets stock quotes and other metrics from Yahoo Finance using the yahoo APIs. (YQL)</description>
+  <documentation>http://grails.org/plugin/yahoofinance</documentation>
+  <type>YahoofinanceGrailsPlugin</type>
+  <resources>
+    <resource>com.ibaralf.YahooFinanceController</resource>
+    <resource>com.ibaralf.DateUtilService</resource>
+    <resource>com.ibaralf.YahooFinanceYQLService</resource>
+    <resource>com.ibaralf.StockQuoteTagLib</resource>
+  </resources>
+  <repositories>
+    <repository name='grailsCentral' url='http://grails.org/plugins' />
+    <repository name='http://repo.grails.org/grails/core' url='http://repo.grails.org/grails/core/' />
+    <repository name='mavenCentral' url='http://repo1.maven.org/maven2/' />
+  </repositories>
+  <dependencies>
+    <compile>
+      <dependency group='org.codehaus.jackson' name='jackson-mapper-asl' version='1.9.9' />
+      <dependency group='net.sf.opencsv' name='opencsv' version='2.3' />
+      <dependency group='org.codehaus.jackson' name='jackson-core-asl' version='1.9.9' />
+      <dependency group='commons-httpclient' name='commons-httpclient' version='3.1' />
+    </compile>
+  </dependencies>
+  <plugins />
+  <runtimePluginRequirements />
+  <behavior />
+</plugin>
