@@ -7,20 +7,27 @@ class YahoofinanceGrailsPlugin {
     def dependsOn = [:]
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
-        "grails-app/views/error.gsp"
+        "grails-app/views/error.gsp",
+        "grails-app/views/index.gsp",
+        "grails-app/controllers/**/*.groovy",
+        "web-app/css/**/*.*",
+        "web-app/js/**/*.*",
+        "web-app/images/**/*.*",
+        "grails-app/resourceMappers/**/test/*",
+        "grails-app/conf/*Resources.groovy"
     ]
 
     // TODO Fill in these fields
     def title = "Yahoofinance Plugin" // Headline display name of the plugin
     def author = "Ibarra Alfonso"
-    def authorEmail = "ibaralf@yahoo.com"
+    def authorEmail = "ibarra.alfonso@gmail.com"
     def description = '''\
-Plugin allows getting stock quotes and other metrics from Yahoo Finance
-using the yahoo APIs. (YQL)
+Plugin uses Yahoo Finance web-services, uses both CSV - mapped to a List, and the YQL Yahoo service - mapped directly from 
+JSON to object. 
 '''
 
     // URL to the plugin's documentation
-    def documentation = "http://grails.org/plugin/yahoofinance"
+    def documentation = "https://github.com/ibaralf/yahoofinance/wiki"
 
     // Extra (optional) plugin metadata
 
@@ -28,7 +35,7 @@ using the yahoo APIs. (YQL)
 //    def license = "APACHE"
 
     // Details of company behind the plugin (if there is one)
-    def organization = [ name: "Ibaralf Inc.", url: "http://www.ibaralf.com/" ]
+    def organization = [ name: "", url: "" ]
 
     // Any additional developers beyond the author specified above.
 //    def developers = [ [ name: "Joe Bloggs", email: "joe@bloggs.net" ]]
