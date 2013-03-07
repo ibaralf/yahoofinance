@@ -1,23 +1,21 @@
 package com.ibaralf
 
-import org.codehaus.groovy.grails.validation.routines.UrlValidator;
-import java.net.URLEncoder;
-import org.apache.commons.httpclient.util.URIUtil;
-import org.codehaus.jackson.map.ObjectMapper;
-import com.csvreader.CsvReader;
-import au.com.bytecode.opencsv.*;
+import org.apache.commons.httpclient.util.URIUtil
+import org.codehaus.jackson.map.ObjectMapper
+
+import au.com.bytecode.opencsv.CSVReader
 
 /**
  * IMPORTANT: PLEASE READ
  * I do not guarantee the reliability or availability of the Yahoo web services
- * 
- * I am not qualified, licensed, approved or authorized to make any investment recommendations or give any such advice. 
- * All data and information on this site is based on data from sources that are not under my control. 
- * I cannot guarantee the accuracy of any of the data, in fact I know of some significant data problems such as, 
- * but not limited to, incorrect stock splits that lead to radically incorrect prices. 
- * No investing decision should be taken based on the information on this site alone, 
- * and none of the information here is a recommendation to buy or sell any security!! 
- * Do the appropriate further analysis and due diligence before investing. 
+ *
+ * I am not qualified, licensed, approved or authorized to make any investment recommendations or give any such advice.
+ * All data and information on this site is based on data from sources that are not under my control.
+ * I cannot guarantee the accuracy of any of the data, in fact I know of some significant data problems such as,
+ * but not limited to, incorrect stock splits that lead to radically incorrect prices.
+ * No investing decision should be taken based on the information on this site alone,
+ * and none of the information here is a recommendation to buy or sell any security!!
+ * Do the appropriate further analysis and due diligence before investing.
  * I make no guarantees whatsoever about future returns using the methods.
  */
 
@@ -31,24 +29,24 @@ import au.com.bytecode.opencsv.*;
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * 
+ *
  * See the "GNU General Public License" for more detail.
- * 
+ *
  */
 class YahooFinanceYQLService {
 
 	static transactional = false
-	
+
 	/**
-	 * List of stock statistical data available  
+	 * List of stock statistical data available
 	 */
 	List availableStats = [ "Ask", "AverageDailyVolume", "AskSize", "Bid", "Ask(Realtime)", "Bid(Realtime)", "BookValue", "BidSize",
 		"Change&PercentChange", "Change", "Commission", "Change(Realtime)", "AfterHoursChange(Realtime)", "Dividend/Share",
 		"LastTradeDate", "TradeDate", "Earnings/Share", "ErrorIndication", "EPSEstimateCurrentYear", "EPSEstimateNextYear",
-		"EPSEstimateNextQuarter", "FloatShares", "DaysLow", "DaysHigh", "52WeekLow", "52WeekHigh", 
+		"EPSEstimateNextQuarter", "FloatShares", "DaysLow", "DaysHigh", "52WeekLow", "52WeekHigh",
 		"HoldingsGainPercent", "AnnualizedGain", "HoldingsGain", "HoldingsGainPercent(Realtime)", "HoldingsGain(Realtime)",
 		"MoreInfo", "OrderBook(Realtime)", "MarketCapitalization", "MarketCapitalization(Realtime)", "EBITDA", "ChangeFrom52WeekLow",
-		"PercentChangeFrom52WeekLow", "LastTrade(Realtime)WithTime", "ChangePercent(Realtime)", "LastTradeSize", "ChangeFrom52WeekHigh", 
+		"PercentChangeFrom52WeekLow", "LastTrade(Realtime)WithTime", "ChangePercent(Realtime)", "LastTradeSize", "ChangeFrom52WeekHigh",
 		"PercentChangeFrom52WeekHigh", "LastTrade(WithTime)", "LastTrade", "HighLimit",
 		"LowLimit", "DaysRange", "DaysRange(Realtime)", "50DayMovingAverage", "200DayMovingAverage", "ChangeFrom200DayMovingAverage",
 		"PercentChangeFrom200DayMovingAverage", "ChangeFrom50DayMovingAverage", "PercentChangeFrom50DayMovingAverage", "Name",
@@ -68,7 +66,7 @@ class YahooFinanceYQLService {
 		def queryString = "select * from yahoo.finance.quotes where symbol in (\"AAPL\")&env=store://datatables.org/alltableswithkeys&format=json"
 		def urlStr = "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20%28%22${stockSymbols}%22%29&env=store://datatables.org/alltableswithkeys&format=json"
 		def uri = URIUtil.encodeQuery(urlStr)
-		println "ENCODED: ${uri}"
+		log.debug "ENCODED: ${uri}"
 		def url = new URL(urlStr)
 		def connection = url.openConnection()
 		connection.setRequestProperty("Method","GET")
@@ -76,10 +74,10 @@ class YahooFinanceYQLService {
 		connection.doOutput = true
 		connection.connect()
 		def resu = connection.content.text
-		println "GOT REQUEST: ${resu}"
+		log.debug "GOT REQUEST: ${resu}"
 		return resu
 	}
-	
+
 	/**
 	 * Called by yahoo finance taglib. In the view, this is
 	 * invoked using <yahoofinance:quote symbol="YHOO" stat="lastTrade" />
@@ -88,13 +86,12 @@ class YahooFinanceYQLService {
 	 * @return value of statistic passed in the parameter
 	 */
 	def taglibQuote(String symbol, String stat) {
-		def resultList = quote(symbol, stat).get(0)
-		def returnValue = resultList[stat]
-		return returnValue
+		def resultList = quote(symbol, stat)[0]
+		return resultList[stat]
 	}
-	
+
 	/**
-	 * Returns a list of stock standard key statistics information. Uses the Yahoo CSV web-service. 
+	 * Returns a list of stock standard key statistics information. Uses the Yahoo CSV web-service.
 	 * @param symbols string of stock symbol/s (ex. TGT,WMT,AAPL)
 	 * @return list of data for requested stock/s.
 	 */
@@ -106,7 +103,7 @@ class YahooFinanceYQLService {
 		def quoteReply = executeYQLCSV(url)
 		return mapQuote(quoteReply, tagKeys)
 	}
-	
+
 	/**
 	 * Returns a list of stock data depending on specific statistics requested. Uses the Yahoo CSV web-service.
 	 * @param symbols string of stock symbol/s (ex. TGT,WMT,AAPL)
@@ -122,9 +119,9 @@ class YahooFinanceYQLService {
 		def quoteReply = executeYQLCSV(url)
 		return mapQuote(quoteReply, tagKeys)
 	}
-	
+
 	/**
-	 * Retrieves stock data of company symbols passed using Yahoo YQL. Uses the well documented Yahoo YQL 
+	 * Retrieves stock data of company symbols passed using Yahoo YQL. Uses the well documented Yahoo YQL
 	 * web services. Unfortunately the Yahoo YQL web service is not highly reliable. Frequent 404 errors are seen.
 	 * @param symbols company stock symbols (ex. "YHOO, GOOG")
 	 * @param keystats name of statistic to retrieve
@@ -136,12 +133,11 @@ class YahooFinanceYQLService {
 		def quoteReply = executeYQL(url)
 		def mapper = new ObjectMapper()
 		StockQuote yqlRequest = mapper.readValue(quoteReply, StockQuote.class)
-		def stats = yqlRequest.getAllStockData()
-		return stats
+		return yqlRequest.getAllStockData()
 	}
-		
+
 	/**
-	 * Retrieves stock data of company symbols passed using Yahoo YQL. Uses the well documented Yahoo YQL 
+	 * Retrieves stock data of company symbols passed using Yahoo YQL. Uses the well documented Yahoo YQL
 	 * web services. Unfortunately the Yahoo YQL web service is not highly reliable. Frequent 404 errors are seen.
 	 * @param symbols company stock symbols (ex. "YHOO, GOOG")
 	 * @param keystats name of statistic to retrieve
@@ -171,7 +167,7 @@ class YahooFinanceYQLService {
 		}
 		return returnData
 	}
-	
+
 	/**
 	 * Returns a list of historical stock statistics within the past number of days specified. List of statistics are <br/>
 	 * [Date, Open, High, Low, Close, Volume, Adj Close]
@@ -184,7 +180,7 @@ class YahooFinanceYQLService {
 		def beforeDate = today - numberOfDays
 		return getHistoricalQuotes(symbol, beforeDate, today)
 	}
-	
+
 	/**
 	 * Returns list of historical stock statistics between the specified dates. List stock data are <br/>
 	 * [Date, Open, High, Low, Close, Volume, Adj Close]
@@ -198,7 +194,7 @@ class YahooFinanceYQLService {
 		if ( !(startDate ==~ datePattern) || !(endDate ==~ datePattern) ) {
 			return ["ERROR: Date Strings must be in the format mm/dd/yyyy or mm-dd-yyyy"]
 		}
-		def sdateList 
+		def sdateList
 		def edateList
 		if (startDate.find(/-/)) {
 			sdateList = startDate.split("\\-")
@@ -214,7 +210,7 @@ class YahooFinanceYQLService {
 		Date eDate = new GregorianCalendar(edateList[2].toInteger(), edateList[0].toInteger() - 1, edateList[1].toInteger()).getTime()
 		return getHistoricalQuotes(symbol, sDate, eDate)
 	}
-	
+
 	/**
 	 * Returns list of historical stock data between the specified dates. List stock data are <br/>
 	 * [Date, Open, High, Low, Close, Volume, Adj Close]
@@ -228,12 +224,9 @@ class YahooFinanceYQLService {
 			endDate = startDate
 		}
 		def url = getHistoricalDataCSVURL(symbol, startDate, endDate)
-		def historicalCSV = executeYQLCSV(url)
-		return historicalCSV
+		return executeYQLCSV(url)
 	}
-	
-	private
-	
+
 	/**
 	 * Returns integer part of the date to extract depending on parameter passed.
 	 * @param d Date object to extract DAY, MONTH, YEAR, ...
@@ -247,7 +240,7 @@ class YahooFinanceYQLService {
 			case 'DAY':
 				return d.getAt(Calendar.DATE)
 			case 'MONTH':
-				def monthPart = d.getAt(Calendar.MONTH) 
+				def monthPart = d.getAt(Calendar.MONTH)
 				if (monthStart == 0) {
 					monthPart = monthPart - 1
 				}
@@ -264,7 +257,7 @@ class YahooFinanceYQLService {
 				return d.getAt(Calendar.DAY_OF_WEEK_IN_MONTH)
 		}
 	}
-	
+
 	/**
 	 * Converts commas in the string to '+' symbol. This is the format needed when making web-service calls using YQL.
 	 * Also removes any spaces in the string to format correctly.
@@ -277,11 +270,11 @@ class YahooFinanceYQLService {
 		def pattern = /,/
 		return symbolString.replaceAll(pattern, "+")
 	}
-	
+
 	/**
 	 * Executes the URL to make the web service call. Used with getQuoteURL()
 	 * @param urlToRun String of URL to call
-	 * @return 
+	 * @return
 	 */
 	def executeYQL(String urlToRun) {
 		def url = new URL(urlToRun)
@@ -291,19 +284,19 @@ class YahooFinanceYQLService {
 		connection.doOutput = true
 		connection.connect()
 		def result = '{"query":{"count":0,"created":"1970-01-01T00:00:00Z","lang":"en-US","results":{"quote":[{}]}}}'
-		if (connection.responseCode == 200 || connection.responseCode == 201) { 
+		if (connection.responseCode == 200 || connection.responseCode == 201) {
 			result = connection.content.text
 			result = result.replace('"quote":{"symbol"', '"quote":[{"symbol"')
 			result = result.replace('}}}}', '}]}}}')
 		}
 		return result
 	}
-	
+
 	/**
 	 * Makes the web-service call to Yahoo Finance for historical stock quotes in CSV format. Uses
 	 * CSVReader to get response.
 	 * @param urlToRun URL of yahoo finance web-service
-	 * @return List of CSV data 
+	 * @return List of CSV data
 	 */
 	List executeYQLCSV(urlToRun) {
 		def url = new URL(urlToRun)
@@ -321,13 +314,13 @@ class YahooFinanceYQLService {
 		}
 		return csvlist
 	}
-	
+
 	/**
 	 * Returns the URL needed to make a yahoo finance web service call to get historical stock data in CSV form.
 	 * @param stockSymbol company stock symbol
 	 * @param startDate Date object with starting date
 	 * @param endDate Date object with ending date
-	 * @return return URL to call 
+	 * @return return URL to call
 	 */
 	String getHistoricalDataCSVURL(String stockSymbol, Date startDate, Date endDate) {
 		def sday = extractDateField(startDate, "DAY")
@@ -339,7 +332,7 @@ class YahooFinanceYQLService {
 		def stockHistoricalYQL="http://itable.finance.yahoo.com/table.csv?s=${stockSymbol}&g=d&a=${smonth}&b=${sday}&c=${syear}&d=${emonth}&e=${eday}&f=${eyear}"
 		return stockHistoricalYQL
 	}
-	
+
 	/**
 	 * Currently not used. Returns the URL needed to get news articles related to the stocks.<br/>
 	 * NOTE: Probably can use java.net.URLEncoder.encode to make the URL more readable.
@@ -347,8 +340,7 @@ class YahooFinanceYQLService {
 	 * @return URL of yahoo web service to fetch news related to stocks passed.
 	 */
 	String getNewsURL(String stockSymbols) {
-		def stockNewsYQL = "http://query.yahooapis.com/v1/public/yql?q=select%20href%20from%20html%20where%20url%3D%22http%3A%2F%2Ffinance.yahoo.com%2Fq%3Fs%3D${stockSymbols}%22%20and%20xpath%3D'%2F%2Fdiv%5B%40id%3D%22yfi_headlines%22%5D%2Fdiv%5B2%5D%2Ful%2Fli%2Fa'&format=json&callback=cbfunc"
-		return stockNewsYQL
+		return "http://query.yahooapis.com/v1/public/yql?q=select%20href%20from%20html%20where%20url%3D%22http%3A%2F%2Ffinance.yahoo.com%2Fq%3Fs%3D${stockSymbols}%22%20and%20xpath%3D'%2F%2Fdiv%5B%40id%3D%22yfi_headlines%22%5D%2Fdiv%5B2%5D%2Ful%2Fli%2Fa'&format=json&callback=cbfunc"
 	}
 
 	/**
@@ -359,9 +351,9 @@ class YahooFinanceYQLService {
 	 * @return
 	 */
 	def getHistoricalDataURL(stockSymbol, startDate, endDate) {
-		def stockHistoricalYQL= "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata%20where%20symbol%3D%22${stockSymbol}%22%20and%20startDate%3D%22${startDate}%22%20and%20endDate%3D%22${endDate}%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=cbfunc"
+		return "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata%20where%20symbol%3D%22${stockSymbol}%22%20and%20startDate%3D%22${startDate}%22%20and%20endDate%3D%22${endDate}%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=cbfunc"
 	}
-	
+
 	/**
 	 * Returns String URL for calling yahoo web-service. <br/>
 	 * Ex. getQuoteURL("YHOO+AAPL+MSFT")
@@ -369,24 +361,22 @@ class YahooFinanceYQLService {
 	 * @return URL string to call YQL in JSON
 	 */
 	def getQuoteURL(stockSymbols) {
-		def stockQuotesYQL = "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20%28%22${stockSymbols}%22%29&env=store://datatables.org/alltableswithkeys&format=json"
-		return stockQuotesYQL
+		return "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20%28%22${stockSymbols}%22%29&env=store://datatables.org/alltableswithkeys&format=json"
 	}
-	
+
 	/**
 	 * Returns String URL for calling yahoo finance. URL returns a CSV <br/>
 	 * Ex. getQuoteURL("YHOO+AAPL+MSFT", "snl1yr") - Stock symbols are separated by '+', data info requested are specified by the yahoo finance special tags
 	 *    for example 's' is for symbol or 'y' returns the yield, see tagMap for more equivalent symbols.
-	 * 
+	 *
 	 * @param stockSymbols stock symbols separated by '+'
 	 * @param dataTags tags corresponding to data requested
 	 * @return URL string to call YQL in JSON
 	 */
 	String getCSVQuoteURL(String stockSymbols, String dataTags) {
-		def stockQuotesYQL = " http://finance.yahoo.com/d/quotes.csv?s=${stockSymbols}&f=${dataTags}"
-		return stockQuotesYQL
+		return " http://finance.yahoo.com/d/quotes.csv?s=${stockSymbols}&f=${dataTags}"
 	}
-	
+
 	/**
 	 * Transposes two lists and creates a list of mapped values.
 	 * @param responseList List of CSV values
@@ -396,13 +386,13 @@ class YahooFinanceYQLService {
 	List mapQuote(List responseList, List keyList) {
 		def rval = []
 		responseList.each {
-			def singleData = it 
+			def singleData = it
 			def transposed = [keyList,singleData].transpose().collectEntries { it }
 			rval.add(transposed)
 		}
 		return rval
 	}
-	
+
 	/**
 	 * Returns list of stock statistical keys. Used if user does not specify any specific statistic to get.
 	 * @return List of standart statistics keys.
@@ -410,7 +400,7 @@ class YahooFinanceYQLService {
 	List getStandardTagKeys() {
 		return stdMap.keySet() as List
 	}
-	
+
 	/**
 	 * Returns the equivalent tags for statistics keys. This is specified by the yahoo web service.
 	 * @param requestedTags String of statictics separated by commas
@@ -428,16 +418,15 @@ class YahooFinanceYQLService {
 		}
 		return resultTag
 	}
-	
+
 	/**
 	 * Gets all the tags for standard statistical stock data.
 	 * @return String of standard statistical tags.
 	 */
 	String getStandardTags() {
-		def values = stdMap.values()
-		return values.join()
+		return stdMap.values().join()
 	}
-	
+
 	/**
 	 * Map of standard stock statistical data and equivalent tag. <br/>
 	 * The lookup is not case sensitive (see method getTags() ).
@@ -463,13 +452,13 @@ class YahooFinanceYQLService {
 		"averageDailyVolume" : 'a2',
 		"bid" : 'b',
 		"ask" : 'a']
-	
+
 	/**
 	 * Map of ALL stock statistical data available from the Yahoo web service. <br/>
 	 * The lookup is not case sensitive (see method getTags() ).
 	 */
 	def tagMap = [ "ask": 'a',
-		"averagedailyvolume": 'a2', 
+		"averagedailyvolume": 'a2',
 		"asksize": 'a5',
 		"bid": 'b',
 		"ask(realtime)": 'b2',
@@ -553,9 +542,9 @@ class YahooFinanceYQLService {
 		"daysvaluechange(realtime)": 'w4',
 		"stockexchange": 'x',
 		"dividendyield": 'y']
-	
-		
-	
+
+
+
 	// NOT USED AT THE MOMENT
 	def extendedMap = ["s" : [ "symbol", "val" ],
 		"n" : [ "name", "val" ],
@@ -602,6 +591,4 @@ class YahooFinanceYQLService {
 		"l3" : [ "lowLimit", "val" ],
 		"n4" : [ "notes", "val" ],
 		"x" : [ "stockExchange", "val" ]]
-		
-	
 }

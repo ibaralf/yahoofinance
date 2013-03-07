@@ -1,32 +1,28 @@
 package com.ibaralf
 
-import java.util.Date;
-
 /**
  * Utility to manipulate or extract date related information.
  * @author ibarra.alfonso@gmail.com
- *
  */
 class DateUtilsService {
 
-    static final DEBUG_MODE = false
-	
+	static final boolean DEBUG_MODE = false
+
 	/**
-	 * Pass integer parameters for month and year and this returns a date 
-	 * for the first of the month. Not that useful, just a match for the 
+	 * Pass integer parameters for month and year and this returns a date
+	 * for the first of the month. Not that useful, just a match for the
 	 * getMonthEnd function.
 	 * @param month
 	 * @param year
-	 * @return 
+	 * @return
 	 */
 	Date getMonthStart(int month, int year) {
 		def startDay = 1
-		def startDate = new Date(month + "/" + startDay + "/" + year)
-		return startDate
+		return new Date(month + "/" + startDay + "/" + year)
 	}
-	
+
 	/**
-	 * Pass integer parameters for month and year and this returns a date for 
+	 * Pass integer parameters for month and year and this returns a date for
 	 * the last day of the month with time set for 11:59PM. Useful since end of the month
 	 * days can be 30 or 31, or for February it can be 28 or 29.
 	 * @param month integer value of the month (ex. 1 for January, 12 for December)
@@ -35,14 +31,13 @@ class DateUtilsService {
 	 */
 	Date getMonthEnd(int month, int year) {
 		def endDay = getLastDayOfTheMonth(month - 1, year)
-		def endDate = new Date(month + "/" + endDay + "/" + year + " 23:59:00")
-		return endDate
+		return new Date(month + "/" + endDay + "/" + year + " 23:59:00")
 	}
-	
+
 	/**
-	 * Returns a future date from the fromDate parameter. The interval 
-	 * is determined by the parameter interval. 
-	 * Ex. if paramater passed is Jan 15, 2013 and interval 'yearly', 
+	 * Returns a future date from the fromDate parameter. The interval
+	 * is determined by the parameter interval.
+	 * Ex. if paramater passed is Jan 15, 2013 and interval 'yearly',
 	 * the return Date object would be Jan 15, 2013.
 	 * @param fromDate starting date where to calculate the future date.
 	 * @param interval String interval can be any of ("monthly", "every two months", "every three months", "every six months", "yearly" )
@@ -69,14 +64,14 @@ class DateUtilsService {
 		}
 		return rval.getTime()
 	}
-	
+
 	/**
 	 * Returns the string of the starting date of a quarter. Dates are
 	 * start of quarter or year to date with respect to current date.
-	 * Ex. 
-	 * If the date today is Jun 5, 2012 and interval is 'Current Quarter', 
+	 * Ex.
+	 * If the date today is Jun 5, 2012 and interval is 'Current Quarter',
 	 * this returns 04/01/2012 - date of quarter where Jun 5 falls in
-	 *  
+	 *
 	 * @param ival String value of interval ("Current Quarter", "Last Quarter", "Year to Date")
 	 * @return the string of the date in mm/dd/yyyy format
 	 */
@@ -110,12 +105,12 @@ class DateUtilsService {
 				startDate = "01/01/" + getCurrentYear()
 				break
 			default:
-				startDate = getCurrentMonthPlus() + "/01/" + getCurrentYear() 
+				startDate = getCurrentMonthPlus() + "/01/" + getCurrentYear()
 				break
 		}
 		return startDate
 	}
-	
+
 	/**
 	 * Returns the string of the ending date of a quarter. Dates are
 	 * start of quarter or year to date with respect to current date.
@@ -147,7 +142,7 @@ class DateUtilsService {
 		}
 		return endDate
 	}
-	
+
 	/**
 	 * Returns the Date object of the starting date for a quarter.
 	 * @param interval ("Current Quarter", "Last Quarter", "Year to Date")
@@ -157,7 +152,7 @@ class DateUtilsService {
 		def intervalStartDateString = getIntervalStartDateString(interval)
 		return (new Date(intervalStartDateString))
 	}
-	
+
 	/**
 	 * Returns the Date object of the ending date for a quarter.
 	 * @param interval ("Last Quarter", "Year to Date")
@@ -167,11 +162,11 @@ class DateUtilsService {
 		def intervalEndDateString = getIntervalEndDateString(interval)
 		return (new Date(intervalEndDateString))
 	}
-	
+
 	/**
 	 * Returns date object of the current month's first day
-	 * Ex. 
-	 * If today is Feb 12, 2013, this returns a date object 
+	 * Ex.
+	 * If today is Feb 12, 2013, this returns a date object
 	 * with date set for Feb 1, 2013
 	 * @return Date object with first day of the current month
 	 */
@@ -181,7 +176,7 @@ class DateUtilsService {
 		p("CURRENT DATE: ${d}")
 		return new Date(d)
 	}
-	
+
 	/**
 	 * Returns integer value of current month. (January is 0 ... December is 11).
 	 * Gregorian/Julian calendars always start with 0 for January.
@@ -190,17 +185,17 @@ class DateUtilsService {
 	def getCurrentMonth() {
 		return getDatePart('MONTH')
 	}
-	
+
 	/**
-	 * Returns integer value of current month with starting value at 1. 
+	 * Returns integer value of current month with starting value at 1.
 	 * (January is 1 ... December is 12).
 	 * @return integer value of current month
 	 */
 	def getCurrentMonthPlus() {
-		def monthPlusOne = getDatePart('MONTH') + 1  
+		def monthPlusOne = getDatePart('MONTH') + 1
 		return monthPlusOne
 	}
-	
+
 	/**
 	 * Returns integer value of current year
 	 * @return integer value of current year
@@ -208,15 +203,15 @@ class DateUtilsService {
 	def getCurrentYear() {
 		return getDatePart('YEAR')
 	}
-	
+
 	/**
-	 * Returns integer value of current day 
+	 * Returns integer value of current day
 	 * @return integer value of current day
 	 */
 	def getCurrentDay() {
 		return getDatePart('DAY')
 	}
-	
+
 	/**
 	 * Returns the integer value of last year.
 	 * Ex.
@@ -227,11 +222,11 @@ class DateUtilsService {
 		def year = getDatePart('YEAR')
 		return year - 1
 	}
-	
+
 	/**
 	 * Gets the part (DAY, MONTH, YEAR, ...) of the current date.
-	 * Ex. 
-	 * If today is January 12, 2012, getting date part 'MONTH' returns 0 
+	 * Ex.
+	 * If today is January 12, 2012, getting date part 'MONTH' returns 0
 	 * @param part the part of the date to extract ("MONTH", "YEAR", "HOUR", "MINUTE", "DAY", "DATE")
 	 * @return integer value of extracted part of the date
 	 */
@@ -278,7 +273,7 @@ class DateUtilsService {
 				return d.getAt(Calendar.DAY_OF_WEEK_IN_MONTH)
 		}
 	}
-	
+
 	/**
 	 * Converts month integer value to abbreviated month name.
 	 * @param intMonth integer/string of month (ex. 1, 2, ...12)
@@ -314,22 +309,22 @@ class DateUtilsService {
 		}
 		return rval
 	}
-	
+
 	/**
 	 * Returns the last 2 digits of the year
-	 * Ex. 
+	 * Ex.
 	 * for 2012, this returns '12'
 	 * @param yr year to truncate
-	 * @return truncated year value 
+	 * @return truncated year value
 	 */
 	def truncateYear(yr) {
 		def rval = yr.toString()
 		if (rval.length() == 4) {
 			rval = rval[2..3]
-		} 
+		}
 		return rval
 	}
-	
+
 	/**
 	 * Returns integer value of the last day of the month passed in the parameter
 	 * @param mon integer of month (start at 0 for January)
@@ -341,7 +336,7 @@ class DateUtilsService {
 		c.set(yr, mon, 1)
 		return c.getActualMaximum(Calendar.DAY_OF_MONTH)
 	}
-	
+
 	/**
 	 * Returns a date object of the last day of the month, time also set at 11:59PM
 	 * @param mon integer of month (start at 0 for January)
@@ -354,7 +349,7 @@ class DateUtilsService {
 		c.set(yr, mon, lastDay, 23, 59, 0)
 		return c.getTime()
 	}
-	
+
 	/**
 	 * Returns a date object of the first day of the month
 	 * @param mon integer of month (start at 0 for January)
@@ -366,12 +361,12 @@ class DateUtilsService {
 		c.set(yr, mon, 1, 0, 0, 0)
 		return c.getTime()
 	}
-	
+
 	/**
 	 * Returns a map [startDate: dateString, endDate: dateString], this function prevents having
 	 * the startDate be after the endDate or startDate greaterthan the current date.
-	 * 1) If startDate is greater than current date then 
-	 * startDate = current Date 
+	 * 1) If startDate is greater than current date then
+	 * startDate = current Date
 	 * endDate = current Date
 	 * 2) If endDate is greater than current date then
 	 * endDate = current Date
@@ -399,9 +394,9 @@ class DateUtilsService {
 			edate = sdate
 		}
 		return [startDate: dateToString(sdate), endDate: dateToString(edate)]
-		
+
 	}
-	
+
 	/**
 	 * Returns string value of a date in mm/dd/yyyy format
 	 * @param dd Date object to convert
@@ -413,10 +408,9 @@ class DateUtilsService {
 		def year = extractDateField(dd, 'YEAR')
 		return month + "/" + day + "/" + year
 	}
-	
-	 
+
 	/**
-	 * Returns a list of week start-end dates. 
+	 * Returns a list of week start-end dates.
 	 * @param start Date object with desired starting date
 	 * @param end Date object with desired ending date
 	 * @return list of weeks Date start of week, Date end of week
@@ -442,7 +436,7 @@ class DateUtilsService {
 		}
 		return rval
 	}
-	
+
 	/**
 	 * Returns a list of all years within start date and end date.
 	 * @param start starting Date object
@@ -458,7 +452,7 @@ class DateUtilsService {
 		}
 		return allyears
 	}
-	
+
 	/**
 	 * Returns a list of month start-end dates.
 	 * @param start starting Date object
@@ -544,9 +538,9 @@ class DateUtilsService {
 		}
 		return rval
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param toadjust
 	 * @return
 	 */
@@ -563,9 +557,9 @@ class DateUtilsService {
 		p "ADJUSTED: ${returnDate}"
 		return returnDate
 	}
-	
+
 	/**
-	 * Converts number of seconds to days. 
+	 * Converts number of seconds to days.
 	 * @param numSecs number of seconds to convert
 	 * @param decimalPlaces sets the number of decimal places in returned value.
 	 * @return equivalent in days (with decimal values)
@@ -579,7 +573,7 @@ class DateUtilsService {
 			return 0
 		}
 	}
-	
+
 	/**
 	 * Converts seconds into days hours:minutes string.
 	 * Ex. 2 days 06:23
@@ -607,7 +601,7 @@ class DateUtilsService {
 		}
 		return "${dayDisplay} ${hourDisplay}:${minutesDisplay}"
 	}
-	
+
 	/**
 	 * Converts seconds into minutes seconds.
 	 * Ex. 323min 34s
@@ -622,10 +616,10 @@ class DateUtilsService {
 		def secondsDisplay = "${seconds.toInteger()}"
 		return "${minutesDisplay}min ${secondsDisplay}s"
 	}
-	
+
 	/**
 	 * Returns number of business days within a date range from Date start to Date end
-	 * Counts the number of days EXCLUDING saturdays and sundays. Does not put into 
+	 * Counts the number of days EXCLUDING saturdays and sundays. Does not put into
 	 * account holidays.
 	 * @param start Date object for the starting date
 	 * @param end Date object for the ending date
@@ -645,19 +639,19 @@ class DateUtilsService {
 		}
 		return numBusinessDays
 	}
-	
+
 	/**
 	 * Probably not used much.
-	 * Returns index of year in the array 
+	 * Returns index of year in the array
 	 * @param yearArray List of years
 	 * @param yearName year to search index
-	 * @return index value 
+	 * @return index value
 	 */
 	def getYearIndex(yearArray, yearName) {
 		def indx = yearArray.indexOf(yearName)
 		return indx
 	}
-	
+
 	/**
 	 * Returns a List of month names.
 	 * @return  List of all months
@@ -666,7 +660,7 @@ class DateUtilsService {
 		def allmonths = ['January', 'February', 'March' ,'April','May', 'June','July', 'August', 'September', 'October', 'November','December']
 		return allmonths
 	}
-	
+
 	/**
 	 * Return index value of the month passed as a parameter. Used to convert month to numerical value. <br/>
 	 * Ex. getMonthIndex("April")
@@ -684,9 +678,9 @@ class DateUtilsService {
 		}
 		return indx
 	}
-	
+
 	/**
-	 * Returns list of all days. Used for labels. 
+	 * Returns list of all days. Used for labels.
 	 * List is composed of ['DAY1', ... 'DAY31']
 	 * @return list of day labels
 	 */
@@ -697,7 +691,7 @@ class DateUtilsService {
 		}
 		return alldays
 	}
-	
+
 	/**
 	 * Returns index of day name + 1 <br/>
 	 * Ex. getDayIndex("DAY10")
@@ -718,9 +712,9 @@ class DateUtilsService {
 		}
 		return indx
 	}
-	
+
 	/**
-	 * Returns a list of all the months within a date range (start - end). Month list can 
+	 * Returns a list of all the months within a date range (start - end). Month list can
 	 * be names or integer value equivalent.<br/>
 	 * Ex. getMonthAxes(start=>11/14/2012, end=>03/22/2013, "string")
 	 * returns ["November", "December", "January", "February", "March"]
@@ -756,11 +750,11 @@ class DateUtilsService {
 		}
 		return rval
 	}
-	
+
 	/**
 	 * Used by method getMonthAxes, this loops through the starting index to the ending index.
 	 * This only works for a single year. Use getMonthAxes if the range spans over more than one year.<br/>
-	 * Ex. getMonthList(0, 5, 'integer') 
+	 * Ex. getMonthList(0, 5, 'integer')
 	 * returns [0,1,2,3,4,5]
 	 * @param sindex integer starting value
 	 * @param eindex integer ending value
@@ -782,7 +776,7 @@ class DateUtilsService {
 		}
 		return months
 	}
-	
+
 	/**
 	 * Returns list of years within the date range passed.<br/>
 	 * Ex. getYearAxes(start=>11/14/2012, end=>03/22/2013)
@@ -822,10 +816,10 @@ class DateUtilsService {
 		}
 		return rval
 	}
-	
+
 	/**
 	 * Converts month name and year into a Date object with the day set for the first day of the month. <br/>
-	 * Ex. convertMonthYearStringToDate("July 2009") 
+	 * Ex. convertMonthYearStringToDate("July 2009")
 	 * returns Date with 07/01/2009
 	 * @param monYear string with month name and year ("December 2012")
 	 * @return Date object with date passed in parameter
@@ -833,10 +827,10 @@ class DateUtilsService {
 	Date convertMonthYearStringToDate(String monYear) {
 		def monthStr = getMonthIndex(monYear.split()[0])
 		def yearStr = monYear.split()[1]
-		def newDate = new Date( monthStr + "/1/" + yearStr)  
+		def newDate = new Date( monthStr + "/1/" + yearStr)
 		return newDate
 	}
-	
+
 	/**
 	 * Print line to console if DEBUG_MODE is true
 	 * @param msg String message to print
@@ -844,9 +838,7 @@ class DateUtilsService {
 	 */
 	def p(msg) {
 		if (DEBUG_MODE) {
-			println "${msg}"
+			log.debug "${msg}"
 		}
 	}
-	
-	
 }
