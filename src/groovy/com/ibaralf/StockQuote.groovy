@@ -1,53 +1,46 @@
-
-package com.ibaralf;
-
-import java.util.List;
+package com.ibaralf
 
 /**
- * Class that is used to get specific stock data.
+ * Used to get specific stock data.
  * @author ialfonso
- *
  */
-public class StockQuote{
-   	private Query query;
+class StockQuote{
+
+	Query query
 
 	/**
-	 * Gets a List of Mapped stock data. 
+	 * Gets a List of Mapped stock data.
 	 * @return List of Map containing stock data
 	 */
-	public List getQuotes() {
-		if (this.query) {
-			Results results =  this.query.getResults()
+	List getQuotes() {
+		if (query) {
+			Results results =  query.getResults()
 			if (results) {
-				return this.query.getResults().getQuote()
+				return query.getResults().getQuote()
 			}
 		}
 		return null
 	}
-	
-	public Results getResults() {
-		if (this.query) {
-			Results results =  this.query.getResults()
-			return results
-		}
-		return null
+
+	Results getResults() {
+		return query?.getResults()
 	}
-	
+
 	/**
 	 * Returns the Last Trade Price
 	 * @param stockSymbol stock symbol (Ex. YHOO)
 	 * @return stock last trade price
 	 */
-	public String getLastTrade(String stockSymbol) {
+	String getLastTrade(String stockSymbol) {
 		def returnVal = ""
-		def stock_result = this.query.getResults().getQuote()
-		def quote = this.query.getResults().findStockData(stockSymbol)
+		def stock_result = query.getResults().getQuote()
+		def quote = query.getResults().findStockData(stockSymbol)
 		if (quote) {
 			returnVal = quote['LastTradePriceOnly']
 		}
 		return returnVal
 	}
-	
+
 	/**
 	 * Returns the specific stock statistic passed in the parameter. <br/>
 	 * Ex. getValue("YHOO", "volume")
@@ -55,7 +48,7 @@ public class StockQuote{
 	 * @param whichStat String statistic
 	 * @return value of statistic requested in String
 	 */
-	public String getValue(String stockSymbol, String whichStat) {
+	String getValue(String stockSymbol, String whichStat) {
 		def returnVal = ""
 		def results = getResults()
 		if (results) {
@@ -66,32 +59,18 @@ public class StockQuote{
 		}
 		return returnVal
 	}
-	
+
 	/**
 	 * Retrieves all data of a specific stock
 	 * @param stockSymbol company stock symbol
-	 * @return 
+	 * @return
 	 */
-	public String getAllStockData() {
-		def results = getResults()
-		if (results) {
-			return results.getQuote()
-		}
+	String getAllStockData() {
+		return getResults()?.getQuote()
 	}
-	
- 	public Query getQuery(){
-		return this.query;
-	}
-	 
-	public void setQuery(Query query){
-		this.query = query;
-	}
-	
-	public String toString() {
-		def stock_result = this.query.getResults().getQuote()
+
+	String toString() {
+		def stock_result = query.getResults().getQuote()
 		return "com.ibaralf.StockQuote ${stock_result.size()}"
 	}
-	
-	
-	
 }
