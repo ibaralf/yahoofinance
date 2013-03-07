@@ -1,20 +1,21 @@
 package com.ibaralf
 
-import grails.test.mixin.*
-import org.junit.*
-import grails.test.TagLibUnitTestCase
-import grails.test.MockUtils
+import grails.test.mixin.TestFor
+
+import org.junit.Before
 
 /**
  * See the API for {@link grails.test.mixin.web.GroovyPageUnitTestMixin} for usage instructions
  */
-//@TestFor(StockQuoteTagLib)
-class StockQuoteTagLibTests extends TagLibUnitTestCase {
+@TestFor(StockQuoteTagLib)
+class StockQuoteTagLibTests {
+
+	@Before
+	void setup() {
+		 applicationContext.getBean(StockQuoteTagLib).yahooFinanceYQLService = new YahooFinanceYQLService()
+	}
 
 	void testQuote() {
-		MockUtils.mockCommandObject(StockQuote)
-		tagLib.quote symbol:'AAPL', data:'Name'
-		assertEquals('Apple Inc.', tagLib.out.toString())
+		assert applyTemplate("<yahoofinance:quote symbol='AAPL' stat='Name' />") == 'Apple Inc.'
 	}
-    
 }
